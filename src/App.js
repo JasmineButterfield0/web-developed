@@ -3,6 +3,7 @@ import Editor from 'react-simple-code-editor';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-markdown';
 import 'prismjs/themes/prism.css';
+import { marked } from 'marked';
 
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
@@ -19,6 +20,7 @@ function App() {
   const [body, setBody] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [search, setSearch] = useState('');
+  const [preview, setPreview] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes));
@@ -49,6 +51,7 @@ function App() {
 
     setTitle('');
     setBody('');
+    setPreview(false);
   };
 
   const deleteNote = (id) => {
@@ -71,6 +74,7 @@ function App() {
     setEditingId(null);
     setTitle('');
     setBody('');
+    setPreview(false);
   };
 
   const formatDate = (iso) => {
@@ -94,7 +98,24 @@ function App() {
       </header>
 
       <div className="editor-section">
-        <h2 className="editor-title">{editingId ? 'Edit Note' : 'New Note'}</h2>
+        <div className="editor-header">
+          <h2 className="editor-title">{editingId ? 'Edit Note' : 'New Note'}</h2>
+          <div className="editor-tabs">
+            <button
+              className={`tab-btn${!preview ? ' tab-active' : ''}`}
+              onClick={() => setPreview(false)}
+            >
+              Write
+            </button>
+            <button
+              className={`tab-btn${preview ? ' tab-active' : ''}`}
+              onClick={() => setPreview(true)}
+              disabled={!body.trim()}
+            >
+              Preview
+            </button>
+          </div>
+        </div>
         <input
           className="input-title"
           type="text"
@@ -103,21 +124,28 @@ function App() {
           onChange={e => setTitle(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && document.querySelector('.editor-highlighted textarea').focus()}
         />
-        <div className="editor-highlighted">
-          <Editor
-            value={body}
-            onValueChange={setBody}
-            highlight={code => Prism.highlight(code, Prism.languages.markdown, 'markdown')}
-            padding={10}
-            placeholder="Write your note in Markdown..."
-            style={{
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif',
-              fontSize: '1rem',
-              lineHeight: '1.6',
-              minHeight: '120px',
-            }}
+        {preview ? (
+          <div
+            className="markdown-preview"
+            dangerouslySetInnerHTML={{ __html: marked(body) }}
           />
-        </div>
+        ) : (
+          <div className="editor-highlighted">
+            <Editor
+              value={body}
+              onValueChange={setBody}
+              highlight={code => Prism.highlight(code, Prism.languages.markdown, 'markdown')}
+              padding={10}
+              placeholder="Write your note in Markdown..."
+              style={{
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif',
+                fontSize: '1rem',
+                lineHeight: '1.6',
+                minHeight: '120px',
+              }}
+            />
+          </div>
+        )}
         <div className="editor-actions">
           <button
             className="btn btn-primary"
