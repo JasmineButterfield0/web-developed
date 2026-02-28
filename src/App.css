@@ -93,6 +93,73 @@ body {
   line-height: 1.6;
 }
 
+/* Markdown syntax-highlighted editor */
+.editor-highlighted {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fafafa;
+  margin-bottom: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.editor-highlighted:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  background: #fff;
+}
+
+.editor-highlighted textarea {
+  outline: none !important;
+  caret-color: #1a1a2e;
+}
+
+/* Prism markdown token colours */
+.token.title .token.punctuation,
+.token.bold .token.punctuation,
+.token.italic .token.punctuation,
+.token.strike .token.punctuation,
+.token.code .token.punctuation {
+  color: #9ca3af;
+}
+
+.token.title {
+  color: #4f46e5;
+  font-weight: 700;
+}
+
+.token.bold {
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.token.italic {
+  font-style: italic;
+  color: #374151;
+}
+
+.token.code {
+  color: #0369a1;
+  background: #f0f9ff;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.token.url,
+.token.url-reference {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+.token.blockquote.punctuation {
+  color: #9ca3af;
+}
+
+.token.list.punctuation {
+  color: #6366f1;
+  font-weight: 600;
+}
+
 .editor-actions {
   display: flex;
   gap: 10px;
