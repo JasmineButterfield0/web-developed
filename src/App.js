@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import Editor from 'react-simple-code-editor';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-markdown';
+import 'prismjs/themes/prism.css';
 
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
@@ -97,15 +101,23 @@ function App() {
           placeholder="Title"
           value={title}
           onChange={e => setTitle(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && document.querySelector('.input-body').focus()}
+          onKeyDown={e => e.key === 'Enter' && document.querySelector('.editor-highlighted textarea').focus()}
         />
-        <textarea
-          className="input-body"
-          placeholder="Write your note here..."
-          value={body}
-          onChange={e => setBody(e.target.value)}
-          rows={5}
-        />
+        <div className="editor-highlighted">
+          <Editor
+            value={body}
+            onValueChange={setBody}
+            highlight={code => Prism.highlight(code, Prism.languages.markdown, 'markdown')}
+            padding={10}
+            placeholder="Write your note in Markdown..."
+            style={{
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif',
+              fontSize: '1rem',
+              lineHeight: '1.6',
+              minHeight: '120px',
+            }}
+          />
+        </div>
         <div className="editor-actions">
           <button
             className="btn btn-primary"
